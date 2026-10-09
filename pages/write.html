@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEVON - Write Novel</title>
+    <link rel="stylesheet" href="/style/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="brand-group">
+            <div class="logo">
+                <span>LEVON</span>
+            </div>
+            <p class="tagline">Web Novels for Everyone</p>
+        </div>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Reading Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="mode-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
+
+    <nav class="floating-nav">
+        <a href="/" class="nav-item">HOME</a>
+        <a href="/pages/library.html" class="nav-item">LIBRARY</a>
+        <a href="/pages/account.html" class="nav-item active">ACCOUNT</a>
+    </nav>
+
+    <main class="content-container">
+        <section id="auth-gate" class="auth-card" style="display: none;">
+            <h2>Login Required</h2>
+            <p>You need an active account to draft and publish stories on LEVON.</p>
+            <div class="auth-actions">
+                <a href="/pages/auth.html" class="tag active" style="text-decoration: none; display: inline-block;">Log In</a>
+            </div>
+        </section>
+
+        <section id="write-editor-panel" class="auth-card" style="max-width: 800px; text-align: left;">
+            <h2>Publish New Novel</h2>
+            <p style="margin-bottom: 2rem;">Draft your world, set your genre, and publish Chapter 1.</p>
+
+            <div class="profile-form">
+                <div class="input-group">
+                    <label>Novel Title</label>
+                    <input type="text" id="novel-title" placeholder="e.g., Shadows of the Astral Realm">
+                </div>
+
+                <div class="input-group">
+                    <label>Genre</label>
+                    <input type="text" id="novel-genre" placeholder="Fantasy, Sci-Fi, Romance, Action...">
+                </div>
+
+                <div class="input-group">
+                    <label>Synopsis</label>
+                    <textarea id="novel-synopsis" style="height: 90px;" placeholder="Brief summary to hook your readers..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Chapter 1 Content</label>
+                    <textarea id="novel-content" style="height: 250px;" placeholder="Start writing your story here..."></textarea>
+                </div>
+
+                <button class="tag active profile-save-btn" onclick="publishNovel()">Publish Story</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const toggle = document.getElementById('mode-toggle');
+        toggle.addEventListener('change', () => {
+            document.body.classList.toggle('reading-mode');
+            localStorage.setItem('readingMode', toggle.checked);
+        });
+
+        if (localStorage.getItem('readingMode') === 'true') {
+            toggle.checked = true;
+            document.body.classList.add('reading-mode');
+        }
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            document.getElementById('write-editor-panel').style.display = 'none';
+            document.getElementById('auth-gate').style.display = 'block';
+        }
+
+        async function publishNovel() {
+            const title = document.getElementById('novel-title').value.trim();
+            const genre = document.getElementById('novel-genre').value.trim();
+            const synopsis = document.getElementById('novel-synopsis').value.trim();
+            const content = document.getElementById('novel-content').value.trim();
+
+            if (!title || !genre || !synopsis || !content) {
+                alert('Please fill out all fields before publishing.');
+                return;
+            }
+
+            const response = await fetch('/api/novels/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    author_id: user.id,
+                    title,
+                    genre,
+                    synopsis,
+                    content
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Novel published successfully!');
+                window.location.href = '/pages/account.html';
+            } else {
+                alert(data.error || 'Failed to publish novel.');
+            }
+        }
+    </script>
+</body>
+</html>

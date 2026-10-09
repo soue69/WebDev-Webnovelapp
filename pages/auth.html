@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEVON - Join Us</title>
+    <link rel="stylesheet" href="/style/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="brand-group">
+            <div class="logo">
+                <span>LEVON</span>
+            </div>
+            <p class="tagline">Web Novels for Everyone</p>
+        </div>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Reading Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="mode-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
+
+    <nav class="floating-nav">
+        <a href="/" class="nav-item">HOME</a>
+        <a href="/pages/library.html" class="nav-item">LIBRARY</a>
+        <a href="/pages/account.html" class="nav-item active">ACCOUNT</a>
+    </nav>
+
+    <main class="content-container">
+        
+        
+        <section id="login-form-card" class="auth-card" style="margin: 2rem auto; display: block;">
+            <h2>Log In to LEVON</h2>
+            <p>Welcome back! Enter your credentials to access your shelves.</p>
+            
+            <div class="profile-form" style="text-align: left; margin-bottom: 1.5rem;">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" placeholder="name@example.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button class="tag active" style="width: 100%; margin-top: 0.5rem;" onclick="handleLogin()">Log In</button>
+            </div>
+            
+            <p class="tagline">Don't have an account? <span id="to-signup-btn" style="cursor: pointer; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Create Account</span></p>
+        </section>
+
+        
+        <section id="signup-form-card" class="auth-card" style="margin: 2rem auto; display: none;">
+            <h2>Create Your Account</h2>
+            <p>Join our community to write, read, and collect web novels.</p>
+            
+            <div class="profile-form" style="text-align: left; margin-bottom: 1.5rem;">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="signup-username" placeholder="Choose a public name">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="signup-email" placeholder="name@example.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="signup-password" placeholder="••••••••">
+                </div>
+                <button class="tag active" style="width: 100%; margin-top: 0.5rem;" onclick="handleSignup()">Create Account</button>
+            </div>
+            
+            <p class="tagline">Already a member? <span id="to-login-btn" style="cursor: pointer; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Log In</span></p>
+        </section>
+
+    </main>
+
+    <script>
+        const toggle = document.getElementById('mode-toggle');
+        const loginCard = document.getElementById('login-form-card');
+        const signupCard = document.getElementById('signup-form-card');
+        const toSignupBtn = document.getElementById('to-signup-btn');
+        const toLoginBtn = document.getElementById('to-login-btn');
+
+        toggle.addEventListener('change', () => {
+            document.body.classList.toggle('reading-mode');
+            localStorage.setItem('readingMode', toggle.checked);
+        });
+
+        if (localStorage.getItem('readingMode') === 'true') {
+            toggle.checked = true;
+            document.body.classList.add('reading-mode');
+        }
+
+        toSignupBtn.addEventListener('click', () => {
+            loginCard.style.display = 'none';
+            signupCard.style.display = 'block';
+        });
+
+        toLoginBtn.addEventListener('click', () => {
+            signupCard.style.display = 'none';
+            loginCard.style.display = 'block';
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('mode') === 'signup') {
+            loginCard.style.display = 'none';
+            signupCard.style.display = 'block';
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = '/pages/account.html';
+            } else {
+                alert(data.error);
+            }
+        }
+
+        async function handleSignup() {
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Account created! Turning you over to log in panel.');
+                signupCard.style.display = 'none';
+                loginCard.style.display = 'block';
+            } else {
+                alert(data.error);
+            }
+        }
+    </script>
+</body>
+</html>
