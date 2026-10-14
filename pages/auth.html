@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEVON - Join Us</title>
-    <link rel="stylesheet" href="/style/index.css">
+    <link rel="stylesheet" href="/style/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -80,78 +80,7 @@
 
     </main>
 
-    <script>
-        const toggle = document.getElementById('mode-toggle');
-        const loginCard = document.getElementById('login-form-card');
-        const signupCard = document.getElementById('signup-form-card');
-        const toSignupBtn = document.getElementById('to-signup-btn');
-        const toLoginBtn = document.getElementById('to-login-btn');
-
-        toggle.addEventListener('change', () => {
-            document.body.classList.toggle('reading-mode');
-            localStorage.setItem('readingMode', toggle.checked);
-        });
-
-        if (localStorage.getItem('readingMode') === 'true') {
-            toggle.checked = true;
-            document.body.classList.add('reading-mode');
-        }
-
-        toSignupBtn.addEventListener('click', () => {
-            loginCard.style.display = 'none';
-            signupCard.style.display = 'block';
-        });
-
-        toLoginBtn.addEventListener('click', () => {
-            signupCard.style.display = 'none';
-            loginCard.style.display = 'block';
-        });
-
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('mode') === 'signup') {
-            loginCard.style.display = 'none';
-            signupCard.style.display = 'block';
-        }
-
-        async function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                localStorage.setItem('user', JSON.stringify(data.user));
-                window.location.href = '/pages/account.html';
-            } else {
-                alert(data.error);
-            }
-        }
-
-        async function handleSignup() {
-            const username = document.getElementById('signup-username').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-
-            const response = await fetch('/api/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert('Account created! Turning you over to log in panel.');
-                signupCard.style.display = 'none';
-                loginCard.style.display = 'block';
-            } else {
-                alert(data.error);
-            }
-        }
-    </script>
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/auth.js"></script>
 </body>
 </html>
