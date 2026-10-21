@@ -423,3 +423,92 @@ body.reading-mode .input-group textarea {
     justify-content: center;
     gap: 1rem;
 }
+
+/* Novel Card Cover Styling */
+.novel-card-layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.novel-cover-thumb {
+    width: 110px;
+    height: 155px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background: var(--tag-bg);
+    flex-shrink: 0;
+}
+
+.novel-card-info {
+    flex: 1;
+}
+
+/* Dedicated Reader Page Styling */
+.reader-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 3rem 2.5rem;
+    background: var(--nav-bg);
+    border: 1px solid var(--nav-border);
+    border-radius: 24px;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.reader-header {
+    border-bottom: 1px solid var(--dashed-border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.reader-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.reader-content {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    letter-spacing: 0.3px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+@media (max-width: 600px) {
+    .novel-card-layout {
+        flex-direction: column;
+    }
+    .novel-cover-thumb {
+        width: 100%;
+        max-width: 160px;
+        height: 220px;
+        align-self: center;
+    }
+}
+
+.genre-suggestion {
+    background: transparent;
+    border: 1px dashed var(--dashed-border);
+    color: var(--nav-item-color);
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.genre-suggestion:hover {
+    border-color: var(--nav-item-hover);
+    color: var(--nav-item-hover);
+    background: rgba(0, 0, 0, 0.03);
+}

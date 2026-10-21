@@ -14,21 +14,32 @@ async function loadLibrary() {
     const grid = document.getElementById('saved-grid');
 
     if (novels.length > 0) {
-        grid.innerHTML = novels.map(novel => `
-            <div class="auth-card" style="max-width: 100%; text-align: left; margin-bottom: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span class="tag active" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">${novel.genre}</span>
-                    <button onclick="removeFromLibrary(${novel.id})" style="background: #ef4444; color: white; border: none; border-radius: 8px; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; font-weight: 600;">Remove</button>
+        grid.innerHTML = novels.map(novel => {
+            const coverSrc = novel.cover_image ? `/img/${novel.cover_image}` : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
+
+            return `
+                <div class="auth-card" style="max-width: 100%; text-align: left; margin-bottom: 1.5rem;">
+                    <div class="novel-card-layout">
+                        <img src="${coverSrc}" alt="${novel.title} cover" class="novel-cover-thumb">
+                        
+                        <div class="novel-card-info">
+                            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                                <span class="tag active" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">${novel.genre}</span>
+                                <button onclick="removeFromLibrary(${novel.id})" style="background: #ef4444; color: white; border: none; border-radius: 8px; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; font-weight: 600;">Remove</button>
+                            </div>
+
+                            <h3 style="margin-top: 0.5rem; font-size: 1.4rem;">${novel.title}</h3>
+                            <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.6rem;">By ${novel.author}</p>
+                            <p style="font-size: 0.95rem; margin-bottom: 1.2rem;">${novel.synopsis}</p>
+
+                            <a href="/pages/read.html?id=${novel.id}" class="tag active" style="text-decoration: none; display: inline-block; font-size: 0.85rem; padding: 0.4rem 1.2rem;">
+                                📖 Read Novel
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <h3 style="margin-top: 0.5rem; font-size: 1.4rem;">${novel.title}</h3>
-                <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.8rem;">By ${novel.author}</p>
-                <p style="font-size: 0.95rem; margin-bottom: 1rem;">${novel.synopsis}</p>
-                <details style="cursor: pointer; background: rgba(0,0,0,0.03); padding: 0.8rem; border-radius: 8px;">
-                    <summary style="font-weight: 600;">Read Chapter 1</summary>
-                    <p style="margin-top: 0.8rem; white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6;">${novel.content}</p>
-                </details>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     } else {
         grid.innerHTML = `<div class="content-placeholder"><p>Your saved shelf is empty. Explore books on the homepage!</p></div>`;
     }

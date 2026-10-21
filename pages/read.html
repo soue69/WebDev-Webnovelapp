@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEVON - Reading View</title>
+    <link rel="stylesheet" href="/style/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="brand-group">
+            <div class="logo">
+                <span>LEVON</span>
+            </div>
+            <p class="tagline">Web Novels for Everyone</p>
+        </div>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Reading Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="mode-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
+
+    <nav class="floating-nav">
+        <a href="/" class="nav-item">HOME</a>
+        <a href="/pages/library.html" class="nav-item">LIBRARY</a>
+        <a href="/pages/account.html" class="nav-item">ACCOUNT</a>
+    </nav>
+
+    <main class="content-container">
+        <div id="reader-wrapper" class="reader-container">
+            <div class="reader-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <a href="javascript:history.back()" class="tag" style="text-decoration: none; padding: 0.3rem 0.9rem; font-size: 0.8rem;">← Back</a>
+                    <div id="read-genres-container" style="display: flex; gap: 0.4rem; flex-wrap: wrap;"></div>
+                </div>
+                
+                <div style="display: flex; gap: 1.5rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;">
+                    <img id="read-cover-img" src="" alt="Cover" class="novel-cover-thumb" style="width: 100px; height: 140px; display: none;">
+                    <div>
+                        <h1 id="read-title" style="font-size: 1.8rem; line-height: 1.2;">Loading Title...</h1>
+                        <p id="read-author" style="font-size: 0.95rem; opacity: 0.8; margin-top: 0.4rem;">By Author</p>
+                    </div>
+                </div>
+
+                <div class="reader-controls">
+                    <p id="read-synopsis" style="font-size: 0.95rem; opacity: 0.75; font-style: italic; margin: 0; flex: 1; padding-right: 1rem;"></p>
+                    <div style="display: flex; gap: 0.5rem; flex-shrink: 0;">
+                        <button onclick="adjustFontSize(-1)" class="tag" style="padding: 0.3rem 0.7rem; font-size: 0.85rem;">A-</button>
+                        <button onclick="adjustFontSize(1)" class="tag" style="padding: 0.3rem 0.7rem; font-size: 0.85rem;">A+</button>
+                    </div>
+                </div>
+            </div>
+
+            <article id="read-content" class="reader-content">
+                Loading story...
+            </article>
+        </div>
+    </main>
+
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/read.js"></script>
+</body>
+</html>

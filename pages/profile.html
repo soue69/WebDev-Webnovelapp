@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEVON - User Profile</title>
+    <link rel="stylesheet" href="/style/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="brand-group">
+            <div class="logo">
+                <span>LEVON</span>
+            </div>
+            <p class="tagline">Web Novels for Everyone</p>
+        </div>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Reading Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="mode-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
+
+    <nav class="floating-nav">
+        <a href="/" class="nav-item">HOME</a>
+        <a href="/pages/library.html" class="nav-item">LIBRARY</a>
+        <a href="/pages/account.html" class="nav-item">ACCOUNT</a>
+    </nav>
+
+    <main class="content-container">
+        <div class="profile-dashboard-grid" style="margin-top: 1rem;">
+            <section class="profile-card-panel">
+                <div class="profile-avatar-wrapper">
+                    <img id="user-avatar-img" src="" alt="Avatar" class="avatar-display" style="display: none; object-fit: cover;">
+                    <div class="avatar-display" id="user-avatar-letter">U</div>
+                    
+                    <h2 id="user-profile-name" style="font-size: 1.4rem; margin-top: 0.5rem;">User</h2>
+                    <p id="user-profile-bio" style="font-size: 0.9rem; text-align: center; opacity: 0.8; line-height: 1.5;">Bio goes here</p>
+
+                    <div style="margin: 0.5rem 0; text-align: center;">
+                        <div id="user-works-count" style="font-weight: 800; font-size: 1.2rem;">0</div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; text-transform: uppercase;">Published Stories</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="my-works-panel">
+                <div class="panel-header-action">
+                    <h2 id="author-works-title">Published Stories</h2>
+                </div>
+                <div class="works-grid" id="author-works-grid">
+                    <div class="content-placeholder" style="height: 250px;">
+                        <p>Loading works...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="/scripts/common.js"></script>
+    <script src="/scripts/profile.js"></script>
+</body>
+</html>

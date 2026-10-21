@@ -41,19 +41,48 @@
             </div>
         </section>
 
-        <section id="write-editor-panel" class="auth-card" style="max-width: 800px; text-align: left;">
+        <section id="write-editor-panel" class="auth-card" style="max-width: 820px; text-align: left;">
             <h2>Publish New Novel</h2>
-            <p style="margin-bottom: 2rem;">Draft your world, set your genre, and publish Chapter 1.</p>
+            <p style="margin-bottom: 2rem;">Draft your world, add genres, and publish your story.</p>
 
             <div class="profile-form">
+                <div class="input-group">
+                    <label>Book Cover Image</label>
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+                        <img id="cover-preview" src="https://placehold.co/110x155/e2e8f0/64748b?text=Cover+Preview" alt="Cover Preview" class="novel-cover-thumb" style="display: block;">
+                        <div>
+                            <input type="file" id="novel-cover" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="previewCoverImage(event)">
+                            <button type="button" class="tag" style="background: var(--nav-bg);" onclick="document.getElementById('novel-cover').click()">Choose Image File</button>
+                            <p style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem;">PNG, JPG, or WebP format recommended.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="input-group">
                     <label>Novel Title</label>
                     <input type="text" id="novel-title" placeholder="e.g., Shadows of the Astral Realm">
                 </div>
 
                 <div class="input-group">
-                    <label>Genre</label>
-                    <input type="text" id="novel-genre" placeholder="Fantasy, Sci-Fi, Romance, Action...">
+                    <label>Genres (Add one by one)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="genre-input" placeholder="Type a genre and click Add or press Enter (e.g., Fantasy)">
+                        <button type="button" class="tag" style="background: var(--nav-bg);" onclick="addGenreTag()">Add</button>
+                    </div>
+                    
+                    <!-- Quick Suggestions -->
+                    <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; align-items: center;">
+                        <span style="font-size: 0.75rem; opacity: 0.6;">Suggested:</span>
+                        <button type="button" class="genre-suggestion" onclick="addSuggestedGenre('Fantasy')">+ Fantasy</button>
+                        <button type="button" class="genre-suggestion" onclick="addSuggestedGenre('Action')">+ Action</button>
+                        <button type="button" class="genre-suggestion" onclick="addSuggestedGenre('Romance')">+ Romance</button>
+                        <button type="button" class="genre-suggestion" onclick="addSuggestedGenre('Sci-Fi')">+ Sci-Fi</button>
+                        <button type="button" class="genre-suggestion" onclick="addSuggestedGenre('Comedy')">+ Comedy</button>
+                        <button type="button" class="genre-suggestion" onclick="addSuggestedGenre('Mystery')">+ Mystery</button>
+                    </div>
+
+                    <!-- Selected Genre Badges Container -->
+                    <div id="genre-tags-list" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem;"></div>
                 </div>
 
                 <div class="input-group">
@@ -62,8 +91,8 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Chapter 1 Content</label>
-                    <textarea id="novel-content" style="height: 250px;" placeholder="Start writing your story here..."></textarea>
+                    <label>Novel / Story Content</label>
+                    <textarea id="novel-content" style="height: 280px;" placeholder="Start writing your story here..."></textarea>
                 </div>
 
                 <button class="tag active profile-save-btn" onclick="publishNovel()">Publish Story</button>

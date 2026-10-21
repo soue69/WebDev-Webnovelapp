@@ -45,9 +45,21 @@
         <div id="account-dashboard" class="profile-dashboard-grid" style="display: none;">
             <section class="profile-card-panel">
                 <div class="profile-avatar-wrapper">
+                    <img id="avatar-img" src="" alt="Avatar" class="avatar-display" style="display: none; object-fit: cover;">
                     <div class="avatar-display" id="avatar-letter">U</div>
-                    <button class="avatar-change-btn" onclick="handleLogout()">Log Out</button>
+                    
+                    <input type="file" id="avatar-file" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="previewAvatar(event)">
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                        <button type="button" class="avatar-change-btn" onclick="document.getElementById('avatar-file').click()">Change Photo</button>
+                        <button type="button" class="avatar-change-btn" onclick="handleLogout()">Log Out</button>
+                    </div>
+
+                    <div style="margin-top: 0.5rem; text-align: center;">
+                        <div id="stat-works" style="font-weight: 800; font-size: 1.1rem;">0</div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; text-transform: uppercase;">Published Stories</div>
+                    </div>
                 </div>
+
                 <div class="profile-form">
                     <div class="input-group">
                         <label>Display Name</label>
