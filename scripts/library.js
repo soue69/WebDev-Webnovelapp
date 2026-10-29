@@ -33,7 +33,7 @@ async function loadLibrary() {
                             <p style="font-size: 0.95rem; margin-bottom: 1.2rem;">${novel.synopsis}</p>
 
                             <a href="/pages/read.html?id=${novel.id}" class="tag active" style="text-decoration: none; display: inline-block; font-size: 0.85rem; padding: 0.4rem 1.2rem;">
-                                📖 Read Novel
+                                Read Novel
                             </a>
                         </div>
                     </div>
