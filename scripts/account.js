@@ -16,7 +16,7 @@ function updateAvatarDisplay(avatarUrl, username) {
     const imgEl = document.getElementById('avatar-img');
     const letterEl = document.getElementById('avatar-letter');
     if (avatarUrl) {
-        imgEl.src = `/img/${avatarUrl}`;
+        imgEl.src = getMediaUrl(avatarUrl);
         imgEl.style.display = 'flex';
         letterEl.style.display = 'none';
     } else {
@@ -57,7 +57,10 @@ async function loadMyWorks(userId) {
 
     if (novels.length > 0) {
         grid.innerHTML = novels.map(novel => {
-            const coverSrc = novel.cover_image ? `/img/${novel.cover_image}` : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
+            const coverSrc = novel.cover_image 
+                ? getMediaUrl(novel.cover_image) 
+                : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
+
             const genrePills = (novel.genre || '').split(',').map(g => g.trim()).filter(Boolean).map(g => `
                 <span class="tag active" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">${g}</span>
             `).join('');

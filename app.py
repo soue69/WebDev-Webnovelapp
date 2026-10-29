@@ -1,12 +1,18 @@
 from flask import Flask, request, jsonify, send_from_directory
 import sqlite3
 import os
-from werkzeug.utils import secure_filename
-import time
+import cloudinary
+import cloudinary.uploader
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'img')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME", "ui2iniem"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY", "242348329412132"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET", "7UYtqxllZCdBKb7saQGqdQ_6tN0")
+)
 
 app = Flask(__name__, static_folder=BASE_DIR, template_folder=BASE_DIR)
 DB_FILE = os.path.join(BASE_DIR, 'database.db')
@@ -151,32 +157,25 @@ def update_user():
     cursor = conn.cursor()
     cursor.execute('SELECT avatar FROM users WHERE id = ?', (user_id,))
     current_user_row = cursor.fetchone()
-    avatar_filename = current_user_row[0] if current_user_row else ''
+    avatar_url = current_user_row[0] if current_user_row else ''
 
     if 'avatar_image' in request.files:
         file = request.files['avatar_image']
         if file and file.filename != '' and allowed_file(file.filename):
-            ext = file.filename.rsplit('.', 1)[1].lower()
-            safe_name = f"avatar_{int(time.time())}_{secure_filename(file.filename.rsplit('.', 1)[0])}.{ext}"
-            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-            file.save(os.path.join(UPLOAD_FOLDER, safe_name))
+            upload_result = cloudinary.uploader.upload(
+                file,
+                folder="levon/avatars",
+                transformation=[{'width': 400, 'height': 400, 'crop': 'fill', 'gravity': 'face'}]
+            )
+            avatar_url = upload_result.get('secure_url', '')
 
-            if avatar_filename:
-                old_path = os.path.join(UPLOAD_FOLDER, avatar_filename)
-                if os.path.exists(old_path):
-                    try:
-                        os.remove(old_path)
-                    except OSError:
-                        pass
-            avatar_filename = safe_name
-
-    cursor.execute('UPDATE users SET username = ?, bio = ?, avatar = ? WHERE id = ?', (username, bio, avatar_filename, user_id))
+    cursor.execute('UPDATE users SET username = ?, bio = ?, avatar = ? WHERE id = ?', (username, bio, avatar_url, user_id))
     conn.commit()
     conn.close()
 
     return jsonify({
         'success': True,
-        'user': {'id': user_id, 'username': username, 'bio': bio, 'avatar': avatar_filename}
+        'user': {'id': user_id, 'username': username, 'bio': bio, 'avatar': avatar_url}
     }), 200
 
 @app.route('/api/user/<int:user_id>/profile', methods=['GET'])
@@ -214,21 +213,21 @@ def create_novel():
     if not all([author_id, title, genre, synopsis, content]):
         return jsonify({'error': 'Title, genre, synopsis, and content are required'}), 400
 
-    cover_filename = ''
+    cover_url = ''
     if 'cover_image' in request.files:
         file = request.files['cover_image']
         if file and file.filename != '' and allowed_file(file.filename):
-            ext = file.filename.rsplit('.', 1)[1].lower()
-            safe_name = f"cover_{int(time.time())}_{secure_filename(file.filename.rsplit('.', 1)[0])}.{ext}"
-            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-            file.save(os.path.join(UPLOAD_FOLDER, safe_name))
-            cover_filename = safe_name
+            upload_result = cloudinary.uploader.upload(
+                file,
+                folder="levon/covers"
+            )
+            cover_url = upload_result.get('secure_url', '')
 
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
     cursor.execute(
         'INSERT INTO novels (author_id, title, genre, synopsis, content, cover_image) VALUES (?, ?, ?, ?, ?, ?)',
-        (author_id, title, genre, synopsis, content, cover_filename)
+        (author_id, title, genre, synopsis, content, cover_url)
     )
     conn.commit()
     conn.close()
@@ -258,29 +257,21 @@ def update_novel(novel_id):
         conn.close()
         return jsonify({'error': 'Unauthorized to edit this novel'}), 403
 
-    cover_filename = row[1]
+    cover_url = row[1]
     if 'cover_image' in request.files:
         file = request.files['cover_image']
         if file and file.filename != '' and allowed_file(file.filename):
-            ext = file.filename.rsplit('.', 1)[1].lower()
-            safe_name = f"cover_{int(time.time())}_{secure_filename(file.filename.rsplit('.', 1)[0])}.{ext}"
-            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-            file.save(os.path.join(UPLOAD_FOLDER, safe_name))
-
-            if cover_filename:
-                old_path = os.path.join(UPLOAD_FOLDER, cover_filename)
-                if os.path.exists(old_path):
-                    try:
-                        os.remove(old_path)
-                    except OSError:
-                        pass
-            cover_filename = safe_name
+            upload_result = cloudinary.uploader.upload(
+                file,
+                folder="levon/covers"
+            )
+            cover_url = upload_result.get('secure_url', '')
 
     cursor.execute('''
         UPDATE novels 
         SET title = ?, genre = ?, synopsis = ?, content = ?, cover_image = ?
         WHERE id = ?
-    ''', (title, genre, synopsis, content, cover_filename, novel_id))
+    ''', (title, genre, synopsis, content, cover_url, novel_id))
     conn.commit()
     conn.close()
 
@@ -364,7 +355,7 @@ def delete_novel(novel_id):
 
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
-    cursor.execute('SELECT author_id, cover_image FROM novels WHERE id = ?', (novel_id,))
+    cursor.execute('SELECT author_id FROM novels WHERE id = ?', (novel_id,))
     row = cursor.fetchone()
 
     if not row:
@@ -373,14 +364,6 @@ def delete_novel(novel_id):
     if str(row[0]) != str(user_id):
         conn.close()
         return jsonify({'error': 'Unauthorized to delete this story'}), 403
-
-    if row[1]:
-        img_path = os.path.join(UPLOAD_FOLDER, row[1])
-        if os.path.exists(img_path):
-            try:
-                os.remove(img_path)
-            except OSError:
-                pass
 
     cursor.execute('DELETE FROM novels WHERE id = ?', (novel_id,))
     cursor.execute('DELETE FROM saved_novels WHERE novel_id = ?', (novel_id,))

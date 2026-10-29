@@ -36,7 +36,7 @@ async function loadNovel() {
     const coverImg = document.getElementById('read-cover-img');
     if (coverImg) {
         if (novel.cover_image) {
-            coverImg.src = `/img/${novel.cover_image}`;
+            coverImg.src = getMediaUrl(novel.cover_image);
             coverImg.style.display = 'block';
         } else {
             coverImg.style.display = 'none';

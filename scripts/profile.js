@@ -30,7 +30,7 @@ async function initProfile() {
     const imgEl = document.getElementById('user-avatar-img');
     const letterEl = document.getElementById('user-avatar-letter');
     if (targetUserData.avatar) {
-        imgEl.src = `/img/${targetUserData.avatar}`;
+        imgEl.src = getMediaUrl(targetUserData.avatar);
         imgEl.style.display = 'flex';
         letterEl.style.display = 'none';
     } else {
@@ -54,7 +54,10 @@ async function loadAuthorNovels(authorId) {
     }
 
     grid.innerHTML = novels.map(novel => {
-        const coverSrc = novel.cover_image ? `/img/${novel.cover_image}` : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
+        const coverSrc = novel.cover_image 
+            ? getMediaUrl(novel.cover_image) 
+            : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
+
         const genreBadges = (novel.genre || '')
             .split(',')
             .map(g => g.trim())
@@ -71,12 +74,12 @@ async function loadAuthorNovels(authorId) {
                             <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
                                 ${genreBadges}
                             </div>
-                            <span style="font-size: 0.85rem; font-weight: 600;">❤️ ${novel.like_count}</span>
+                            <span style="font-size: 0.85rem; font-weight: 600;">♥ ${novel.like_count}</span>
                         </div>
                         <h3 style="margin-top: 0.5rem; font-size: 1.4rem;">${novel.title}</h3>
                         <p style="font-size: 0.95rem; margin: 0.8rem 0 1.2rem;">${novel.synopsis}</p>
                         <a href="/pages/read.html?id=${novel.id}" class="tag active" style="text-decoration: none; display: inline-block; font-size: 0.85rem; padding: 0.4rem 1.2rem;">
-                            📖 Read Novel
+                            Read Novel
                         </a>
                     </div>
                 </div>

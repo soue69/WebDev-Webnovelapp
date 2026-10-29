@@ -15,7 +15,7 @@ async function loadLibrary() {
 
     if (novels.length > 0) {
         grid.innerHTML = novels.map(novel => {
-            const coverSrc = novel.cover_image ? `/img/${novel.cover_image}` : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
+            const coverSrc = novel.cover_image ? getMediaUrl(novel.cover_image) : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
 
             return `
                 <div class="auth-card" style="max-width: 100%; text-align: left; margin-bottom: 1.5rem;">

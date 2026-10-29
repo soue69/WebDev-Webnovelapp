@@ -101,7 +101,7 @@ function renderNovels() {
     grid.innerHTML = filtered.map(novel => {
         const isSaved = savedIds.has(novel.id);
         const isLiked = likedIds.has(novel.id);
-        const coverSrc = novel.cover_image ? `/img/${novel.cover_image}` : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
+        const coverSrc = novel.cover_image ? getMediaUrl(novel.cover_image) : 'https://placehold.co/110x155/e2e8f0/64748b?text=Cover';
 
         const genreBadges = (novel.genre || '')
             .split(',')
