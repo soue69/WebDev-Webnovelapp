@@ -15,7 +15,7 @@
 body.reading-mode {
     --bg-color: #f4edd8;
     --text-color: #433422;
-    --accent-gradient: linear-gradient(to right, #b25e00, #d97706, #92400e);
+    --accent-gradient: linear-gradient(to right, #d97706, #b25e00, #92400e);
     --nav-bg: rgba(244, 237, 216, 0.55);
     --nav-border: rgba(255, 255, 255, 0.4);
     --nav-item-color: #705e47;
@@ -152,7 +152,7 @@ input:checked + .slider:before { transform: translateX(22px); }
     border: 1px solid var(--nav-border);
     border-radius: 30px;
     z-index: 1000;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0);
     transition: background 0.4s, border 0.4s;
 }
 
